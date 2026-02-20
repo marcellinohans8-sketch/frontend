@@ -65,7 +65,7 @@ export default function Login() {
         `${baseUrl}/google-login`,
         {},
         {
-          headers: { access_token_google: credentialResponse.credential },
+          headers: { "access-token-google": credentialResponse.credential },
         },
       );
       localStorage.setItem("access_token", data.access_token);
