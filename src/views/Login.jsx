@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import Toastify from "toastify-js";
 import axios from "axios";
 import baseUrl from "../constant/BaseUrl";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -58,6 +59,53 @@ export default function Login() {
     }
   }
 
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      const { data } = await axios.post(
+        `${baseUrl}/google-login`,
+        {},
+        {
+          headers: { access_token_google: credentialResponse.credential },
+        },
+      );
+      localStorage.setItem("access_token", data.access_token);
+      Toastify({
+        text: "Succeed Login",
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "#34D399",
+          color: "black",
+          border: "solid #000000",
+          borderRadius: "8px",
+          boxShadow: "2px 2px black",
+        },
+      }).showToast();
+      navigate("/");
+    } catch (error) {
+      Toastify({
+        text: error.response.data.message,
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "#F87171",
+          color: "black",
+          border: "solid #000000",
+          borderRadius: "8px",
+          boxShadow: "2px 2px black",
+        },
+      }).showToast();
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-teal-700 via-black to-teal-900 p-4">
       <div className="w-full max-w-md bg-[#0f172a]/80 backdrop-blur-md border border-teal-500/40 rounded-2xl p-10 shadow-2xl">
@@ -92,7 +140,6 @@ export default function Login() {
               "
             />
           </div>
-
           <div>
             <label className="text-sm text-gray-300">Password</label>
             <input
@@ -112,7 +159,6 @@ export default function Login() {
               "
             />
           </div>
-
           <button
             type="submit"
             className="
@@ -126,8 +172,9 @@ export default function Login() {
               shadow-lg shadow-teal-500/20
             "
           >
-            Masuk
+            Login
           </button>
+          <GoogleLogin onSuccess={handleGoogleLogin} />;
         </form>
 
         <p className="text-center text-gray-400 text-sm mt-6">
