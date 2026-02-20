@@ -174,7 +174,7 @@ export default function Login() {
           >
             Login
           </button>
-          <GoogleLogin onSuccess={handleGoogleLogin} />;
+          <GoogleLogin onSuccess={handleGoogleLogin} />
         </form>
 
         <p className="text-center text-gray-400 text-sm mt-6">
